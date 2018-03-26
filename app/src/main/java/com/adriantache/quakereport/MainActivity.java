@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         earthquakes.add(new Earthquake(6.1f,"London","Feb 2, 2016"));
         earthquakes.add(new Earthquake(3.9f,"Tokyo","Feb 2, 2016"));
         earthquakes.add(new Earthquake(4.5f,"Mexico City","Feb 2, 2016"));
-        earthquakes.add(new Earthquake(2.8f,"Moscow","Feb 2, 2016");
+        earthquakes.add(new Earthquake(2.8f,"Moscow","Feb 2, 2016"));
         earthquakes.add(new Earthquake(1.6f,"Rio de Janeiro","Feb 2, 2016"));
         earthquakes.add(new Earthquake(1.6f,"Paris","Feb 2, 2016"));
 
