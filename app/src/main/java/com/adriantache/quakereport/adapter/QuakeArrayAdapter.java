@@ -43,7 +43,7 @@ public class QuakeArrayAdapter extends ArrayAdapter<Earthquake> {
         Earthquake earthquake = getItem(position);
 
         if (earthquake != null) {
-            holder.magnitude.setText(String.valueOf(earthquake.getMagnitude()));
+            holder.magnitude.setText(earthquake.getMagnitude());
             holder.orientation.setText(earthquake.getOrientation());
             holder.location.setText(earthquake.getLocation());
             holder.time.setText(earthquake.getTime());

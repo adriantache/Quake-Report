@@ -2,6 +2,7 @@ package com.adriantache.quakereport;
 
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -13,14 +14,16 @@ import java.util.Locale;
 public class Earthquake {
 
     private static final String TAG = "Earthquake";
-    private double magnitude;
+    private String magnitude;
     private String orientation;
     private String location;
     private String time;
 
     //todo remove this constructor as we progress
     public Earthquake(double magnitude, String location, long time) {
-        this.magnitude = magnitude;
+        //format the magnitude
+        DecimalFormat decimalFormat = new DecimalFormat("0.1");
+        this.magnitude = decimalFormat.format(magnitude);
 
         //extract location String into two lines
         if (location.contains("of ")) {
@@ -41,7 +44,7 @@ public class Earthquake {
         this.time = this.time.replace(" ", "\n");
     }
 
-    public double getMagnitude() {
+    public String getMagnitude() {
         return magnitude;
     }
 
