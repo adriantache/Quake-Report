@@ -25,6 +25,7 @@ public class Earthquake {
         // use the timezone from the USGS
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         this.time = sdf.format(date);
+        this.time = this.time.replace(" ", "\n");
     }
 
     //todo remove this constructor as we progress
@@ -37,6 +38,7 @@ public class Earthquake {
         // use the timezone from the USGS
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         this.time = sdf.format(date);
+        this.time = this.time.replace(" ", "\n");
     }
 
     public double getMagnitude() {
