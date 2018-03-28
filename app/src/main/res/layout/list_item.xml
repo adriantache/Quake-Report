@@ -7,9 +7,10 @@
     <TextView
         android:id="@+id/magnitude"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/magnitude_circle"
         android:gravity="center_vertical"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"

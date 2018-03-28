@@ -47,6 +47,8 @@ public class QuakeArrayAdapter extends ArrayAdapter<Earthquake> {
             holder.orientation.setText(earthquake.getOrientation());
             holder.location.setText(earthquake.getLocation());
             holder.time.setText(earthquake.getTime());
+
+
         }
 
         return convertView;
