@@ -1,6 +1,6 @@
 package com.adriantache.quakereport;
 
-import android.util.Log;
+import android.net.Uri;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -13,21 +13,20 @@ import java.util.Locale;
 
 public class Earthquake {
 
-    private static final String TAG = "Earthquake";
     private String magnitude;
     private String orientation;
     private String location;
     private String time;
+    private Uri url;
 
     //todo remove this constructor as we progress
-    public Earthquake(double magnitude, String location, long time) {
+    public Earthquake(double magnitude, String location, long time, String URL) {
         //format the magnitude
         DecimalFormat decimalFormat = new DecimalFormat("0.1");
         this.magnitude = decimalFormat.format(magnitude);
 
         //extract location String into two lines
         if (location.contains("of ")) {
-            Log.i(TAG, "Earthquake: " + location + " " + location.indexOf("of "));
             this.orientation = location.substring(0, location.indexOf("of") + 2);
             this.location = location.substring(location.indexOf("of") + 3, location.length());
         } else {
@@ -42,6 +41,9 @@ public class Earthquake {
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         this.time = sdf.format(date);
         this.time = this.time.replace(" ", "\n");
+
+        //convert string to URI to make sure it's correct
+        this.url = Uri.parse(URL);
     }
 
     public String getMagnitude() {
@@ -58,5 +60,9 @@ public class Earthquake {
 
     public String getTime() {
         return time;
+    }
+
+    public Uri getUrl() {
+        return url;
     }
 }

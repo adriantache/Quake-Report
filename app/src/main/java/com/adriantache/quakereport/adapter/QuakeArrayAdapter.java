@@ -81,4 +81,6 @@ public class QuakeArrayAdapter extends ArrayAdapter<Earthquake> {
         TextView location;
         TextView time;
     }
+
+
 }

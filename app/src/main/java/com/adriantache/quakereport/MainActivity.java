@@ -1,7 +1,10 @@
 package com.adriantache.quakereport;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.adriantache.quakereport.adapter.QuakeArrayAdapter;
@@ -29,11 +32,23 @@ public class MainActivity extends AppCompatActivity {
         ListView earthquakeListView = findViewById(R.id.listView);
 
         // Create a new {@link ArrayAdapter} of earthquakes
-        QuakeArrayAdapter adapter = new QuakeArrayAdapter(this, earthquakes);
+        final QuakeArrayAdapter adapter = new QuakeArrayAdapter(this, earthquakes);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
+
+        earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Earthquake earthquake = (Earthquake) adapterView.getItemAtPosition(i);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, earthquake.getUrl());
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void extractQuakes() {
@@ -60,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject properties = jsonObject.optJSONObject("properties");
-                earthquakes.add(new Earthquake(properties.optDouble("mag"), properties.optString("place"), properties.getLong("time")));
+                earthquakes.add(new Earthquake(properties.optDouble("mag"), properties.optString("place"), properties.getLong("time"), properties.getString("url")));
             }
         } catch (JSONException e) {
             e.printStackTrace();
