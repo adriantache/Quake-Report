@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/magnitude_circle"
         android:gravity="center_vertical"
         android:textAlignment="center"
@@ -17,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textColor="@color/textColorEarthquakeDetails"
         android:id="@+id/orientation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:textColor="#000"
+        android:textColor="@color/textColorEarthquakeLocation"
         app:layout_constraintBottom_toBottomOf="@+id/magnitude"
         app:layout_constraintEnd_toEndOf="@+id/orientation"
         app:layout_constraintStart_toStartOf="@+id/orientation"
