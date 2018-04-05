@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private static final String USGS_URL =
-            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
+            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=20";
     private ArrayList<Earthquake> earthquakes;
     private ListView earthquakeListView;
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpList(){
+    private void setUpList() {
         // Create a new {@link ArrayAdapter} of earthquakes
         final QuakeArrayAdapter adapter = new QuakeArrayAdapter(this, earthquakes);
 
@@ -93,9 +93,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String strJson) {
             if (strJson == null) return;
 
+            //convert JSON to Earthquake objects
             extractQuakes(strJson);
 
-           setUpList();
+            //activate the adapter to populate the list
+            setUpList();
         }
     }
 
