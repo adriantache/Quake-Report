@@ -37,7 +37,7 @@ public class Utils {
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
-            } else Log.e(TAG, "makeHTTPConnection: " + urlConnection.getResponseCode());
+            } else Log.e(TAG, "Incorrect HTTP response code: " + urlConnection.getResponseCode());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

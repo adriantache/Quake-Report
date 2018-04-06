@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String USGS_URL =
             "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=20";
+    private static final String TAG = "MainActivity";
     private ArrayList<Earthquake> earthquakes;
     private ListView earthquakeListView;
 
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 earthquakes.add(new Earthquake(properties.getDouble("mag"), properties.getString("place"), properties.getLong("time"), properties.getString("url")));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error parsing JSON", e);
         }
     }
 
