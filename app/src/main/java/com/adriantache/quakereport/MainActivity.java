@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.adriantache.quakereport.adapter.QuakeArrayAdapter;
 
@@ -51,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
+
+        //set empty view for when we get no results
+        TextView emptyView = findViewById(R.id.empty_view);
+        earthquakeListView.setEmptyView(emptyView);
     }
 
     //process JSON string and populate quakes ArrayList
@@ -93,14 +98,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Earthquake>> loader, List<Earthquake> quake) {
-        //activate the adapter to populate the list
-        setUpList(quake);
+        if (quake.size() == 0) {
+            TextView emptyView = findViewById(R.id.empty_view);
+            emptyView.setText("No earthquakes found.");
+        } else {
+            //activate the adapter to populate the list
+            setUpList(quake);
+        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
         setUpList(new ArrayList<Earthquake>());
     }
-
-
 }
