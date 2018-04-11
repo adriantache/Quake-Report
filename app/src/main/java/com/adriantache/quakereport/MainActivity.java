@@ -1,6 +1,10 @@
 package com.adriantache.quakereport;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.adriantache.quakereport.adapter.QuakeArrayAdapter;
@@ -34,8 +39,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //run Loader to populate earthquakes array
-        getSupportLoaderManager().initLoader(0, null, this);
+        //test network connectivity first
+        ConnectivityManager cm = (ConnectivityManager)
+                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         // Find a reference to the {@link ListView} in the layout
         earthquakeListView = findViewById(R.id.listView);
@@ -56,6 +63,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //set empty view for when we get no results
         TextView emptyView = findViewById(R.id.empty_view);
         earthquakeListView.setEmptyView(emptyView);
+
+        //run app only if connectivity is detected
+        if (activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting()) {
+            //run Loader to populate earthquakes array
+            getSupportLoaderManager().initLoader(0, null, this);
+        } else {
+            hideProgressBar();
+            emptyView.setText(R.string.no_internet);
+        }
     }
 
     //process JSON string and populate quakes ArrayList
@@ -88,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
+
+        hideProgressBar();
     }
 
     @NonNull
@@ -98,13 +117,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Earthquake>> loader, List<Earthquake> quake) {
+        hideProgressBar();
+
         if (quake.size() == 0) {
             TextView emptyView = findViewById(R.id.empty_view);
-            emptyView.setText("No earthquakes found.");
+            emptyView.setText(R.string.no_quakes);
         } else {
             //activate the adapter to populate the list
             setUpList(quake);
         }
+    }
+
+    private void hideProgressBar() {
+        ProgressBar indeterminateBar = findViewById(R.id.indeterminateBar);
+        indeterminateBar.setVisibility(View.GONE);
     }
 
     @Override
