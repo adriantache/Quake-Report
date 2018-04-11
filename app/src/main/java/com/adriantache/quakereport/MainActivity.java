@@ -1,10 +1,12 @@
 package com.adriantache.quakereport;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,13 +19,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>>{
 
     private static final String USGS_URL =
             "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=20";
     private static final String TAG = "MainActivity";
-    private ArrayList<Earthquake> earthquakes;
     private ListView earthquakeListView;
 
     @Override
@@ -31,11 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Create a list of earthquake locations.
-        earthquakes = new ArrayList<>();
-
-        //run AsyncTask to populate earthquakes array
-        new EarthquakeAsyncTask().execute(USGS_URL);
+        //run Loader to populate earthquakes array
+        getSupportLoaderManager().initLoader(0, null, this);
 
         // Find a reference to the {@link ListView} in the layout
         earthquakeListView = findViewById(R.id.listView);
@@ -55,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //process JSON string and populate quakes ArrayList
-    private void extractQuakes(String strJson) {
+    public List<Earthquake> extractQuakes(String strJson) {
+        List<Earthquake> quakes = new ArrayList<>();
+
         try {
             JSONObject jsonRootObject = new JSONObject(strJson);
 
@@ -66,41 +67,40 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject properties = jsonObject.getJSONObject("properties");
-                earthquakes.add(new Earthquake(properties.getDouble("mag"), properties.getString("place"), properties.getLong("time"), properties.getString("url")));
+                quakes.add(new Earthquake(properties.getDouble("mag"), properties.getString("place"), properties.getLong("time"), properties.getString("url")));
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing JSON", e);
         }
+
+        return quakes;
     }
 
-    private void setUpList() {
+    private void setUpList(List<Earthquake> quake) {
         // Create a new {@link ArrayAdapter} of earthquakes
-        final QuakeArrayAdapter adapter = new QuakeArrayAdapter(this, earthquakes);
+        final QuakeArrayAdapter adapter = new QuakeArrayAdapter(this, quake);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
     }
 
-    private class EarthquakeAsyncTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            if (TextUtils.isEmpty(strings[0])) return null;
-
-            return Utils.makeHTTPConnection(strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String strJson) {
-            if (strJson == null) return;
-
-            //convert JSON to Earthquake objects
-            extractQuakes(strJson);
-
-            //activate the adapter to populate the list
-            setUpList();
-        }
+    @NonNull
+    @Override
+    public Loader<List<Earthquake>> onCreateLoader(int id, @Nullable Bundle args) {
+        return new EarthquakeLoader(this, MainActivity.this,USGS_URL);
     }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<List<Earthquake>> loader, List<Earthquake> quake) {
+        //activate the adapter to populate the list
+        setUpList(quake);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader loader) {
+
+    }
+
 
 }

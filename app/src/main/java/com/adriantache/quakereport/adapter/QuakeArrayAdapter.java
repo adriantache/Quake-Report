@@ -54,7 +54,6 @@ public class QuakeArrayAdapter extends ArrayAdapter<Earthquake> {
 
             GradientDrawable magnitudeCircle = (GradientDrawable) holder.magnitude.getBackground();
             int magnitudeColor = getMagnitudeColor(Double.valueOf(earthquake.getMagnitude()));
-            Log.i(TAG, "getView: "+magnitudeColor);
             magnitudeCircle.setColor(magnitudeColor);
         }
 
