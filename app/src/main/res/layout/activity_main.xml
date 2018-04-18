@@ -5,22 +5,28 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
         android:id="@+id/indeterminateBar"
+        style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
-        android:indeterminate="true"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true" />
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/listView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:divider="@null"
-        android:dividerHeight="8dp" />
+        android:layout_centerInParent="true">
+
+        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:divider="@null"
+            android:dividerHeight="8dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/empty_view"

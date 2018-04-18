@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -31,12 +32,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>>, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String USGS_URL =
             "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=20";
     private static final String TAG = "MainActivity";
     private ListView earthquakeListView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //set empty view for when we get no results
         TextView emptyView = findViewById(R.id.empty_view);
         earthquakeListView.setEmptyView(emptyView);
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
         //run app only if connectivity is detected
         if (activeNetwork != null &&
@@ -109,13 +113,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(adapter);
-
+        swipeRefreshLayout.setRefreshing(false);
         hideProgressBar();
     }
 
     private void hideProgressBar() {
         ProgressBar indeterminateBar = findViewById(R.id.indeterminateBar);
         indeterminateBar.setVisibility(View.GONE);
+
     }
 
     //loader callbacks methods
@@ -156,11 +161,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             //activate the adapter to populate the list
             setUpList(quake);
         }
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
         setUpList(new ArrayList<Earthquake>());
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     //menu related methods
@@ -181,5 +190,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onRefresh() {
+        getSupportLoaderManager().restartLoader(0, null, this).forceLoad();
     }
 }

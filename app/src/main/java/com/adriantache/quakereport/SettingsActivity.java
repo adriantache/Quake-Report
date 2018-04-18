@@ -16,7 +16,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
     }
 
-    public static class EarthquakePreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener{
+    public static class EarthquakePreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -32,15 +32,15 @@ public class SettingsActivity extends AppCompatActivity {
         public boolean onPreferenceChange(Preference preference, Object o) {
             String stringValue = o.toString();
             if (preference instanceof ListPreference) {
-                               ListPreference listPreference = (ListPreference) preference;
-                               int prefIndex = listPreference.findIndexOfValue(stringValue);
-                               if (prefIndex >= 0) {
-                                       CharSequence[] labels = listPreference.getEntries();
-                                       preference.setSummary(labels[prefIndex]);
-                                   }
-                           } else {
-                               preference.setSummary(stringValue);
-                           }
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(stringValue);
+                if (prefIndex >= 0) {
+                    CharSequence[] labels = listPreference.getEntries();
+                    preference.setSummary(labels[prefIndex]);
+                }
+            } else {
+                preference.setSummary(stringValue);
+            }
             return true;
         }
 
